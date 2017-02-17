@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" class="ua-mac ua-webkit">
+<head>
+	<script type="text/javascript">
+		// function getQueryString(name)
+		// {
+		//      var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		//      var r = window.location.search.substr(1).match(reg);
+		//      if(r!=null)return  unescape(r[2]); return null;
+		// }
+
+		function queryItems() 
+		{
+		   var query=window.location.search.substr(1)
+
+		   var index, name, value
+		   var items = query.split("&");
+		   var dict = {}
+		   for(var i=0; i < items.length; i++) { 
+			    index=items[i].indexOf("=");
+				if(index>0){ 
+					name = items[i].substring(0,index);
+					value=items[i].substr(index+1);
+
+					dict[name]=value;
+				} 
+			}
+			return dict
+		}
+
+		function setCookie(name,value)
+		{
+		    var Days = 30000; 
+		    var exp = new Date(); 
+		    exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+		    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString(); 
+		}
+
+		function getCookie(name) 
+		{ 
+		    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		    if(arr=document.cookie.match(reg))
+		        return unescape(arr[2]); 
+		    else
+		        return null; 
+		}
+
+		//delete cookies 
+		function delCookie(name) 
+		{ 
+			var exp = new Date(); 
+		    exp.setTime(exp.getTime() - 1); 
+		    var cval=getCookie(name); 
+		    if(cval!=null) 
+		        document.cookie= name + "="+cval+";expires="+exp.toGMTString(); 
+		}
+		
+		var queryItems	= queryItems()
+		var action		= queryItems['action']	//operation
+		var scheme		= queryItems['scheme'] || "safaricookie"
+
+		if (action == 'getCookie') {
+			var key			= queryItems['key']; //Cookie的key
+			var items 		= key.split(",");
+			var relocation	= scheme + "://safaricookie/onGetCookie";
+
+			var keyItem, cookie
+			for(var i=0; i < items.length; i++) { 
+				keyItem = items[i];
+				cookie = getCookie(keyItem);
+				relocation = relocation + (i == 0 ? "?" : "&") + keyItem + "=" + cookie;
+			}
+
+			var curLocation	= window.location
+			window.location = encodeURI(relocation)
+		}
+		else if (action == 'setCookie') {
+			// TODO: verification
+			for(var key in queryItems){
+				if (key == "action" || key == "scheme") {
+					continue;
+				};
+
+				var value = queryItems[key]
+				setCookie(key, value)
+			}
+
+			var relocation	= scheme + "://safaricookie/onSetCookie"+window.location.search
+			window.location = encodeURI(relocation)
+		}
+		else if (action == 'delCookie') {
+			var key			= queryItems['key'] 
+			var items 		= key.split(",");
+
+			var keyItem, cookie
+			for(var i=0; i < items.length; i++) { 
+				keyItem = items[i];
+				delCookie(keyItem)
+			}
+
+			var relocation	= scheme + "://safaricookie/onDelCookie"+window.location.search
+			window.location = encodeURI(relocation)
+		};
+	</script>
+</head>
+
+<body>
+</body>
+
+</html>
