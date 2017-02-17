@@ -5,6 +5,12 @@ SFCookie access Safari cookies via `SafariServices`, specifically `SFSafariViewC
 
 ## Installation
 
+### CocoaPods
+
+```ruby
+pod "SFCookie"
+```
+
 ### Manually
 
 1. Download all files in `SFCookie` subdir
