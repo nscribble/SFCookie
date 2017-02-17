@@ -51,6 +51,14 @@ pod "SFCookie"
                 NSLog(@"onDelCookie：%@",nv);
             }];
         }
+        else
+        {
+            [application setCookies:@{@"BYYX":@"SXUIL+#DKD*%%@",
+                                      @"BXXY":@"XESD-3dlsD=djs",
+                                      } complete:^(NSDictionary *nv, NSError *error) {
+                                          NSLog(@"onSetCookie：%@",nv);
+                                      }];
+        }
     }];
     
     return YES;
